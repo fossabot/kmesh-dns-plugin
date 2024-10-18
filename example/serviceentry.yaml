@@ -1,0 +1,20 @@
+kind: ServiceEntry
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: service-provider
+  namespace: gateway-system
+spec:
+  endpoints:
+  - address: 10.244.0.3
+    ports:
+      HTTP: 18082
+  hosts:
+  - service-provider.DEFAULT-GROUP.public.nacos
+  addresses:
+  - 10.244.0.3
+  location: MESH_INTERNAL
+  ports:
+  - name: HTTP
+    number: 18082
+    protocol: HTTP
+  resolution: STATIC

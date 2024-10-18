@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kmeshdns
+  namespace: kube-system
+  labels:
+    app: kmeshdns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kmeshdns
+  template:
+    metadata:
+      labels:
+        app: kmeshdns
+    spec:
+      containers:
+      - name: kmeshdns
+        image: localhost:5000/kmesh-dns:dev
+        command:
+          - /app/kmesh-dns
+        args:
+        - --xdsAddress=istiod.istio-system.svc.cluster.local:15010
+        ports:
+        - containerPort: 15053
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 15053
+          name: dns-udp
+          protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kmeshdns
+  namespace: kube-system
+spec:
+  selector:
+    app: kmeshdns
+  ports:
+  - name: dns
+    port: 15053
+    protocol: UDP
+  - name: dns-tcp
+    port: 15053
+    protocol: TCP
