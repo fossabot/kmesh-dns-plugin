@@ -132,6 +132,15 @@ func (c *AdsController) HandleResponse(con *adsc.ADSC, response *discovery.Disco
 	}
 	c.server.UpdateDNSEntries(dnsEntries)
 
+	// send ACK
+	ackRequest := &discovery.DiscoveryRequest{
+		VersionInfo:   response.VersionInfo,
+		ResponseNonce: response.Nonce,
+		TypeUrl:       response.TypeUrl,
+	}
+	if err := con.Send(ackRequest); err != nil {
+		fmt.Println("Error sending ACK:", err)
+	}
 }
 
 func convertToVIPs(addresses []string) []net.IP {
