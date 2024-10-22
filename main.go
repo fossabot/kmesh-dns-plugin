@@ -37,14 +37,13 @@ func main() {
 }
 
 func newCommand() *cobra.Command {
-	configs := options.NewBootstrapConfigs()
 	serveCmd := &cobra.Command{
 		Use:          "kmesh-dns",
 		Short:        "Start kmesh dns",
 		SilenceUsage: true,
 		RunE: func(c *cobra.Command, args []string) error {
 			cmd.PrintFlags(c.Flags())
-			m, err := pkg.NewDNSManager(configs)
+			m, err := pkg.NewDNSManager()
 			if err != nil {
 				return err
 			}
@@ -59,7 +58,7 @@ func newCommand() *cobra.Command {
 		},
 	}
 
-	configs.AttachFlags(serveCmd)
+	options.GetConfig().AttachFlags(serveCmd)
 
 	return serveCmd
 }

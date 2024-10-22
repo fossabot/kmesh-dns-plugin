@@ -4,30 +4,12 @@ The plugin runs as a standlone server in the cluster, serving DNS A records over
 
 # Quick start
 
-## Step 1: Install kubectl & kind
-
-Linux:
-```sh
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.18.0/kind-linux-amd64
-chmod +x ./kubectl ./kind
-sudo mv ./kubectl ./kind /usr/local/bin
-```
-
-## Step 2: Create and Activate kind
-```sh
-kind create cluster --name kmesh-dns
-```
-
-## Step3: Install Istio
-please refer to [Install istio](https://istio.io/latest/docs/setup/getting-started/#install)
-
-## Step4: Deploy Kmesh coredns plugin
+## Step1: Deploy Kmesh coredns plugin
 ```sh
 kubectl apply -f manifest/deploy.yaml
 ```
 
-## Step5: Forward coreDNS to Kmesh coredns plugin
+## Step2: Forward coreDNS to Kmesh coredns plugin
 ```sh
 kubectl edit cm coredns -n kube-system
 ```
@@ -56,7 +38,7 @@ data:
         reload
         loadbalance
     }
-    // put the domain surfix here
+    // put the domain suffix here
     // e.g. for consul service 
     consul.local:53 {
         errors

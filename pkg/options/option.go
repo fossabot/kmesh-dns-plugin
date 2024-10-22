@@ -16,16 +16,49 @@
 
 package options
 
-import "github.com/spf13/cobra"
+import (
+	logger "istio.io/istio/pkg/log"
+
+	"github.com/spf13/cobra"
+	"istio.io/pkg/env"
+)
+
+const (
+	serviceNodeSeparator      = "~"
+	defaultClusterLocalDomain = "cluster.local"
+)
+
+var (
+	log    = logger.RegisterScope("kmesh-dns", "kmesh-dns options")
+	config *BootstrapConfigs
+)
 
 type BootstrapConfigs struct {
-	DNSAddr    string
-	XDSAddress string
-	VIP        string
+	DNSAddr          string
+	XDSAddress       string
+	VIP              string
+	ServiceNode      string
+	ServiceNameSpace string
 }
 
 func NewBootstrapConfigs() *BootstrapConfigs {
-	return &BootstrapConfigs{}
+	c := &BootstrapConfigs{}
+
+	podName := env.Register("POD_NAME", "", "").Get()
+	podNamespace := env.Register("POD_NAMESPACE", "", "").Get()
+
+	id := podName + "." + podNamespace
+	c.ServiceNode = id
+	c.ServiceNameSpace = podNamespace
+	return c
+}
+
+func GetConfig() *BootstrapConfigs {
+	if config != nil {
+		return config
+	}
+	config = NewBootstrapConfigs()
+	return config
 }
 
 func (c *BootstrapConfigs) AttachFlags(cmd *cobra.Command) {

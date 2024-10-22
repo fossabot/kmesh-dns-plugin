@@ -42,15 +42,17 @@ type AdsController struct {
 	vip       string
 }
 
-func NewAdsController(cfg *options.BootstrapConfigs, dnsServer *dns.KmeshDNSServer) (*AdsController, error) {
+func NewAdsController(dnsServer *dns.KmeshDNSServer) (*AdsController, error) {
 	c := &AdsController{
 		server: dnsServer,
-		vip:    cfg.VIP,
+		vip:    options.GetConfig().VIP,
 	}
-	client, err := adsc.New(cfg.XDSAddress, &adsc.ADSConfig{
+	client, err := adsc.New(options.GetConfig().XDSAddress, &adsc.ADSConfig{
 		InitialDiscoveryRequests: configInitialRequests(),
 		ResponseHandler:          c,
 		Config: adsc.Config{
+			Workload:  options.GetConfig().ServiceNode,
+			Namespace: options.GetConfig().ServiceNameSpace,
 			Meta: model.NodeMetadata{
 				Generator: "api",
 			}.ToStruct(),
@@ -129,6 +131,7 @@ func (c *AdsController) HandleResponse(con *adsc.ADSC, response *discovery.Disco
 		}
 	}
 	c.server.UpdateDNSEntries(dnsEntries)
+
 }
 
 func convertToVIPs(addresses []string) []net.IP {

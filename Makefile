@@ -29,9 +29,13 @@ ifeq ($(TAG),)
   $(error "TAG cannot be empty")
 endif
 
+# Define architecture with defaults
+GOOS ?= linux
+GOARCH ?= amd64
+
 .PHONY: build
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o out/$(TARGET)
+	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o out/$(TARGET)
 
 .PHONY: docker
 docker: build
@@ -42,3 +46,4 @@ docker.push: docker
 	
 clean:
 	rm -f $(TARGET)
+

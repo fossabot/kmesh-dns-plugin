@@ -27,17 +27,17 @@ type Manager struct {
 	ads    *ads.AdsController
 }
 
-func NewDNSManager(cfg *options.BootstrapConfigs) (*Manager, error) {
+func NewDNSManager() (*Manager, error) {
 	m := &Manager{}
 
-	s, err := dns.NewDNSServer(cfg.DNSAddr)
+	s, err := dns.NewDNSServer(options.GetConfig().DNSAddr)
 
 	if err != nil {
 		return nil, err
 	}
 	m.server = s
 
-	adsController, err := ads.NewAdsController(cfg, s)
+	adsController, err := ads.NewAdsController(s)
 
 	if err != nil {
 		return nil, err
