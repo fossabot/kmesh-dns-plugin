@@ -14,54 +14,46 @@
  * limitations under the License.
  */
 
-package pkg
+ package pkg
 
-import (
-	"kmesh.net/kmesh-coredns-plugin/pkg/ads"
-	"kmesh.net/kmesh-coredns-plugin/pkg/dns"
-	"kmesh.net/kmesh-coredns-plugin/pkg/options"
-)
-
-type Manager struct {
-	server *dns.KmeshDNSServer
-	ads    *ads.AdsController
-}
-
-func NewDNSManager() (*Manager, error) {
-	m := &Manager{}
-
-	s, err := dns.NewDNSServer(options.GetConfig().DNSAddr)
-
-	if err != nil {
-		return nil, err
-	}
-	m.server = s
-
-	adsController, err := ads.NewAdsController(s)
-
-	if err != nil {
-		return nil, err
-	}
-
-	m.ads = adsController
-
-	return m, nil
-}
-
-func (m *Manager) Start(stop <-chan struct{}) error {
-	m.server.Start()
-	if err := m.ads.Start(); err != nil {
-		return err
-	}
-
-	m.waitForShutDown(stop)
-	return nil
-}
-
-func (m *Manager) waitForShutDown(stop <-chan struct{}) {
-	go func() {
-		<-stop
-		m.server.Stop()
-		m.ads.Stop()
-	}()
-}
+ import (
+	 "kmesh.net/kmesh-coredns-plugin/pkg/ads"
+	 "kmesh.net/kmesh-coredns-plugin/pkg/dns"
+	 "kmesh.net/kmesh-coredns-plugin/pkg/options"
+ )
+ 
+ type Manager struct {
+	 server *dns.KmeshDNSServer
+	 ads    *ads.AdsController
+ }
+ 
+ func NewDNSManager() (*Manager, error) {
+	 m := &Manager{}
+ 
+	 s, err := dns.NewDNSServer(options.GetConfig().DNSAddr)
+ 
+	 if err != nil {
+		 return nil, err
+	 }
+	 m.server = s
+ 
+	 adsController, err := ads.NewAdsController(s)
+ 
+	 if err != nil {
+		 return nil, err
+	 }
+ 
+	 m.ads = adsController
+ 
+	 return m, nil
+ }
+ 
+ func (m *Manager) Start(stop <-chan struct{}) error {
+	 m.server.Start(stop)
+	 if err := m.ads.Start(stop); err != nil {
+		 return err
+	 }
+ 
+	 return nil
+ }
+ 

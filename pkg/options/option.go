@@ -64,5 +64,5 @@ func GetConfig() *BootstrapConfigs {
 func (c *BootstrapConfigs) AttachFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVar(&c.DNSAddr, "dnsAddr", "", "dns listen address: e.g. localhost:8053")
 	cmd.PersistentFlags().StringVar(&c.XDSAddress, "xdsAddress", "", "controll plane address")
-	cmd.PersistentFlags().StringVar(&c.VIP, "vip", "", "default value for A record, iff ServiceEntry has no Addresses")
+	cmd.PersistentFlags().StringVar(&c.VIP, "vip", "", "default value for A record, if ServiceEntry has no Addresses")
 }
