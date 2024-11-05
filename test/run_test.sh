@@ -123,7 +123,7 @@ function cleanup_kind_cluster() {
 }
 
 function build_and_push_images() {
-    HUB="${KIND_REGISTRY}" TAG="dev" make docker.push
+    HUB="${KIND_REGISTRY}" TAG="test" make docker.push
 }
 
 function install_dependencies() {
@@ -170,9 +170,9 @@ function cleanup_docker_registry() {
 }
 
 function setup_kmesh_coredns_plugin() {
-    kubectl apply -f manifest/deploy.yaml
+    kubectl apply -f test/testdata/test_kmesh_dns.yaml
     while true; do
-        pod_statuses=$(kubectl get pods -n kube-system -l app=kmeshdns -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.phase}{"\n"}{end}')
+        pod_statuses=$(kubectl get pods -n kube-system -l app=kmesh-dns -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.phase}{"\n"}{end}')
 
         running_pods=0
         total_pods=0
@@ -195,7 +195,7 @@ function setup_kmesh_coredns_plugin() {
 }
 
 function setup_coredns() {
-    KMESHDNS_IP=$(kubectl get svc kmeshdns -n kube-system -o jsonpath='{.spec.clusterIP}')
+    KMESHDNS_IP=$(kubectl get svc kmesh-dns -n kube-system -o jsonpath='{.spec.clusterIP}')
 
     NEW_COREDNS_CONFIG=$(cat <<EOF
 apiVersion: v1
@@ -264,7 +264,7 @@ EOF
 }
 
 function test() {
-    kubectl apply -f test/serviceentry.yaml
+    kubectl apply -f test/testdata/test_serviceentry.yaml
     kubectl run --image=hwchiu/netutils netutils
 
     while true; do
