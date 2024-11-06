@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: test-se
+spec:
+  hosts:
+  - app.consul.local
+  - provider.DEFAULT-GROUP.public.nacos
+  addresses:
+  - 17.17.17.17
+  resolution: STATIC
+  endpoints:
+  - address: 2.2.2.2
