@@ -1,4 +1,6 @@
 # kmesh-coredns-plugin
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkmesh-net%2Fkmesh-dns-plugin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkmesh-net%2Fkmesh-dns-plugin?ref=badge_shield)
+
 
 The plugin runs as a standlone server in the cluster, serving DNS A records over gRPC to CoreDNS.
 
@@ -58,3 +60,6 @@ metadata:
   name: coredns
   namespace: kube-system
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkmesh-net%2Fkmesh-dns-plugin.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkmesh-net%2Fkmesh-dns-plugin?ref=badge_large)
